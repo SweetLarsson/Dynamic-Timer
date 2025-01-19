@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Timer</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href="assets/images/dyna.png" />
+  </head>
+
+  <body>
+    <div id="main-container">
+      <!-- FIRST COLUMN -->
+      <section class="column" id="left-column">
+        <div id="column-one-frame">
+          <h2>Load Event</h2>
+          <div id="activity-container">
+            <input type="text" id="activityInput" placeholder="Event" />
+            <div class="time-container">
+              <div class="time-container">
+                <!-- Wheel HH -->
+                <div class="interval-selector">
+                  <button id="time-wheel-label">HH</button>
+                  <div class="wheel" id="hour-wheel"></div>
+                  <button id="select-hour" class="button"></button>
+                </div>
+
+                <!-- Wheel MM -->
+                <div class="interval-selector">
+                  <button id="time-wheel-label">MM</button>
+                  <div class="wheel" id="minute-wheel"></div>
+                  <button id="select-minute" class="button"></button>
+                </div>
+
+                <!-- Wheel SS -->
+                <div class="interval-selector">
+                  <button id="time-wheel-label">SS</button>
+                  <div class="wheel" id="second-wheel"></div>
+                  <button id="select-second" class="button"></button>
+                </div>
+              </div>
+            </div>
+            <button id="addActivityButton">Add Activity</button>
+          </div>
+          <div>
+            <div id="suggested-event">
+              <div class="event-item">Welcome to Church</div>
+              <div class="event-item">Opening Prayers</div>
+              <div class="event-item">Prayers</div>
+              <div class="event-item">Praise & Worship</div>
+              <div class="event-item">Testimony</div>
+              <div class="event-item">Celebration</div>
+              <div class="event-item">Congregational Hymn</div>
+              <div class="event-item">Company of Prophets</div>
+              <div class="event-item">Exhortation</div>
+              <div class="event-item">Communion</div>
+              <div class="event-item">Compassion</div>
+              <div class="event-item">Updates</div>
+              <div class="event-item">Special Presentation</div>
+              <div class="event-item">Extra</div>
+              <div class="event-item">Thanksgiving</div>
+              <div class="event-item">Breakout Session</div>
+              <div class="event-item">Sunday School</div>
+              <div class="event-item">Tea Break</div>
+              <div class="event-item">Lunch Break</div>
+              <div class="event-item">Dinner Break</div>
+              <div class="event-item">Restroom Break</div>
+              <div class="event-item">House Keeping</div>
+              <div class="event-item">Break</div>
+              <div class="event-item">Health Talk</div>
+              <div class="event-item">Architects of God's Dwelling</div>
+              <div class="event-item">Tithe & Offering</div>
+              <div class="event-item">Baby Dedication</div>
+              <div class="event-item">Mission</div>
+              <div class="event-item">First Timers</div>
+              <div class="event-item">Word</div>
+              <div class="event-item">Benediction</div>
+              <div class="event-item">Thank you</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECOND COLUMN -->
+      <section class="column" id="middle-column">
+        <div id="scheduled-event-list">
+          <h2>Scheduled Event <span id="current-time"></span></h2>
+          <div id="scheduled-list-frame">
+            <ul id="activityList"></ul>
+            <button id="selected-item-display"></button>
+          </div>
+        </div>
+        <div id="activity-list-container">
+          <button id="add-logo">Add Logo</button>
+          <button id="add-saved-scheduled-event">Save Schedule</button>
+          <button id="load-saved-scheduled-event">Load Schedule</button>
+          <button id="clearScheduleButton">Clear Schedule</button>
+        </div>
+      </section>
+
+      <!-- THIRD COLUMN -->
+      <section class="column" id="right-column">
+        <div id="preview">
+          <h3 id="previewLabel"></h3>
+          <h1 id="previewCountdown"></h1>
+          <img
+            id="image-preview"
+            src=""
+            alt="No Image"
+            style="
+              width: 100%;
+              
+              z-index: 2;
+              filter: blur(25px);
+              display: none;
+              border-radius: 10px;
+            "
+          />
+        </div>
+        <div id="button-row">
+          <button id="startPauseResumeButton">Start</button>
+          <button id="resetButton">Reset</button>
+          <button id="clearButton">Logo</button>
+        </div>
+      </section>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>File Persistence</title>
+  </head>
+  <body>
+    <script>
+      const addLogoButton = document.getElementById("add-logo");
+      const imagePreview = document.getElementById("image-preview");
+      const videoPreview = document.getElementById("video-preview");
+
+      // Load persisted data on page load
+      window.addEventListener("load", () => {
+        const savedImage = localStorage.getItem("image");
+        const savedVideo = localStorage.getItem("video");
+
+        if (savedImage) {
+          imagePreview.src = savedImage;
+          imagePreview.style.display = "block";
+        }
+
+        if (savedVideo) {
+          videoPreview.src = savedVideo;
+          videoPreview.style.display = "block";
+        }
+      });
+
+      addLogoButton.addEventListener("click", () => {
+        // Create file input for selecting files
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = "image/*,video/*";
+        input.multiple = true;
+
+        input.addEventListener("change", (event) => {
+          const files = event.target.files;
+
+          for (const file of files) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              const dataUrl = e.target.result;
+
+              if (file.type.startsWith("image/")) {
+                localStorage.setItem("image", dataUrl);
+                imagePreview.src = dataUrl;
+                imagePreview.style.display = "block";
+              } else if (file.type.startsWith("video/")) {
+                localStorage.setItem("video", dataUrl);
+                videoPreview.src = dataUrl;
+                videoPreview.style.display = "block";
+              }
+            };
+
+            reader.readAsDataURL(file);
+          }
+        });
+
+        // Trigger file input click
+        input.click();
+      });
+    </script>
+  </body>
+</html>
